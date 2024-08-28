@@ -161,7 +161,7 @@ app.get('/api/quote', async (req, res) => {
         res.json({ quote: randomQuote });
     }
 });
-//
+// API Endpoint 4: Respond with environment variable value
 app.get('/api/secret', (req, res) => {
      const { varName } = req.query;
      if (!varName) {
