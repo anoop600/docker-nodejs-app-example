@@ -50,5 +50,3 @@ jobs:
           subject-name: ${{ secrets.DOCKER_USERNAME }}/example_nodejs
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
