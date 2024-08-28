@@ -1,0 +1,19 @@
+{
+  "name": "my-node-app",
+  "version": "1.0.0",
+  "description": "A simple Node.js application",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "build": "echo 'No build step defined' && exit 0",
+    "test": "echo 'No tests defined' && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "moment": "^2.30.1",
+    "axios": "^1.7.5"
+  },
+  "devDependencies": {
+    "pm2": "^5.4.2"
+  }
+}
