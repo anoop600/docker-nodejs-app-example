@@ -6,7 +6,7 @@ const process = require('process');
 
 // Get environment variables
 const port = process.env.PORT || 3000;
-const bgColor = process.env.BG_COLOR || '#ffffff';
+const bgColor = process.env.BG_COLOR || 'white';
 
 // Initialize Express app
 const app = express();
