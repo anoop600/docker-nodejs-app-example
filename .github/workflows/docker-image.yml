@@ -42,11 +42,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Attest
-        uses: actions/attest-build-provenance@v1
-        id: attest
-        with:
-          subject-name: ${{ secrets.DOCKER_USERNAME }}/example_nodejs
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
