@@ -4,7 +4,7 @@ FROM node:22.7.0-alpine
 ARG USERNAME="node"
 ARG APP_PORT="3001"
 ARG PM2_VERSION="5.4.2"
-ARG COLOR=green
+ARG COLOR=orange
 
 # Set Environment Variables
 ENV BG_COLOR=$COLOR
