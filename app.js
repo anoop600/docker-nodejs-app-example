@@ -145,7 +145,7 @@ app.get('/api/time', (req, res) => {
 
 // API Endpoint 2: Random Number Generator
 app.get('/api/random', (req, res) => {
-    res.json({ randomNumber: Math.floor(Math.random() * 100) + 1 });
+    res.json({ randomNumber: Math.floor(Math.random() * 10000) + 1 });
 });
 
 // API Endpoint 3: Random Quote Generator
