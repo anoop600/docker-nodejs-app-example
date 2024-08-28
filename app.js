@@ -132,6 +132,8 @@ app.get('/', (req, res) => {
                     <p><strong>/api/time:</strong> Returns the current server time.</p>
                     <p><strong>/api/random:</strong> Returns a random number.</p>
                     <p><strong>/api/quote:</strong> Returns a random quote from an online API.</p>
+                    <p><strong>/api/secret:</strong> Returns the value of an environment variable if set.</p>
+                    <p><strong>/api/envKeys:</strong> Lists all environment variable keys.</p>
                 </div>
             </body>
         </html>
@@ -158,6 +160,25 @@ app.get('/api/quote', async (req, res) => {
         const randomQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
         res.json({ quote: randomQuote });
     }
+});
+//
+app.get('/api/secret', (req, res) => {
+     const { varName } = req.query;
+     if (!varName) {
+         return res.status(400).json({ error: 'varName query parameter is required' });
+     }
+     const envValue = process.env[varName];
+     if (envValue) {
+         res.json({ [varName]: envValue });
+     } else {
+         res.json({ message: 'env not set' });
+     }
+ });
+
+// API Endpoint: List All Environment Variable Keys
+app.get('/api/envKeys', (req, res) => {
+    const envKeys = Object.keys(process.env);
+    res.json({ keys: envKeys });
 });
 
 // Start the server
