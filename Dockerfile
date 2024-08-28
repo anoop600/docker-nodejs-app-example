@@ -24,7 +24,7 @@ WORKDIR /home/node/app
 USER node
 
 # Copy only package.json and package-lock.json (if available)
-COPY --chown=$USERNAME:$USERNAME package*.json ./
+COPY --chown=$USERNAME:$USERNAME package* ./
 
 # Install dependencies
 RUN npm install
