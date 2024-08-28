@@ -28,8 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: |
-            name/app
+          images: ${{ secrets.DOCKER_USERNAME }}/example_nodejs
           tags: |
             # minimal (short sha)
             type=sha
@@ -40,5 +39,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/example_nodejs:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
