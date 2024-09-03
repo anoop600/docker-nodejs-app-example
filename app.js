@@ -134,6 +134,10 @@ app.get('/', (req, res) => {
                     <p><strong>/api/quote:</strong> Returns a random quote from an online API.</p>
                     <p><strong>/api/secret:</strong> Returns the value of an environment variable if set.</p>
                     <p><strong>/api/envKeys:</strong> Lists all environment variable keys.</p>
+                    <p><strong>/health/readiness:</strong> Simulates readiness with a delay.
+                        Accepts a <code>delay</code> query parameter (in seconds), with default delay = 0 and maximum delay of 30 seconds.</p>
+                    <p><strong>/health/liveness:</strong> Returns a status message indicating the application is alive.</p>
+
                 </div>
             </body>
         </html>
@@ -180,6 +184,29 @@ app.get('/api/envKeys', (req, res) => {
     const envKeys = Object.keys(process.env);
     res.json({ keys: envKeys });
 });
+
+//API Endpoint: Health Check for App Readiness
+app.get('/health/readiness', (req, res) => {
+    // Get the delay from the query parameter, default to 0 seconds if not provided
+    const delayInSeconds = parseInt(req.query.delay) || 0;
+
+    // Set a maximum delay limit if needed (e.g., 30 seconds)
+    const maxDelayInSeconds = 30; // 30 seconds
+    const effectiveDelayInSeconds = Math.min(delayInSeconds, maxDelayInSeconds);
+
+    // Convert the delay to milliseconds
+    const delayInMilliseconds = effectiveDelayInSeconds * 1000;
+
+    setTimeout(() => {
+        res.status(200).json({status: 'Application is ready'});
+    }, delayInMilliseconds);
+});
+
+// API Endpoint: Liveness Check
+app.get('/health/liveness', (req, res) => {
+    res.status(200).json({ status: 'Application is alive' });
+});
+
 
 // Start the server
 const server = app.listen(port, () => {
