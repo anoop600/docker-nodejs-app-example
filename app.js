@@ -188,7 +188,7 @@ app.get('/api/envKeys', (req, res) => {
 //API Endpoint: Health Check for App Readiness
 app.get('/health/readiness', (req, res) => {
     // Get the delay from the query parameter, default to 0 seconds if not provided
-    const delayInSeconds = 20;
+    const delayInSeconds = parseInt(req.query.delay) || 0;
 
     // Set a maximum delay limit if needed (e.g., 30 seconds)
     const maxDelayInSeconds = 30; // 30 seconds
