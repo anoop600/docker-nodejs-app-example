@@ -11,6 +11,10 @@ const bgColor = process.env.BG_COLOR || 'white';
 // Initialize Express app
 const app = express();
 
+// Global counters for readiness and liveness endpoints
+let readinessCounter = 0;
+let livenessCounter = 0;
+
 // Function to get IP address
 const getIPAddress = () => {
     const interfaces = os.networkInterfaces();
@@ -51,6 +55,12 @@ const fallbackQuotes = [
     "Keep your face always toward the sunshine—and shadows will fall behind you. - Walt Whitman",
     "The best way to predict the future is to create it. - Peter Drucker"
 ];
+
+// Function to simulate delay based on request count
+function simulateDelay(delay, counter) {
+    return counter <= 2 ? delay : 0; // Delay for first two requests
+}
+
 
 // Serve the index page
 app.get('/', (req, res) => {
@@ -134,7 +144,7 @@ app.get('/', (req, res) => {
                     <p><strong>/api/quote:</strong> Returns a random quote from an online API.</p>
                     <p><strong>/api/secret:</strong> Returns the value of an environment variable if set.</p>
                     <p><strong>/api/envKeys:</strong> Lists all environment variable keys.</p>
-                    <p><strong>/health/readiness:</strong> Simulates readiness with a delay.
+                    <p><strong>/health/readiness:</strong> Simulates readiness with a delay for first 2 requests.
                         Accepts a <code>delay</code> query parameter (in seconds), with default delay = 0 and maximum delay of 30 seconds.</p>
                     <p><strong>/health/liveness:</strong> Returns a status message indicating the application is alive.</p>
 
@@ -146,16 +156,19 @@ app.get('/', (req, res) => {
 
 // API Endpoint 1: Current Server Time
 app.get('/api/time', (req, res) => {
+    console.log('Request to /api/time');
     res.json({ time: moment().format('YYYY-MM-DD HH:mm:ss') });
 });
 
 // API Endpoint 2: Random Number Generator
 app.get('/api/random', (req, res) => {
+console.log('Request to /api/random');
     res.json({ randomNumber: Math.floor(Math.random() * 10000) + 1 });
 });
 
 // API Endpoint 3: Random Quote Generator
 app.get('/api/quote', async (req, res) => {
+    console.log('Request to /api/quote');
     try {
         const response = await axios.get('https://api.quotable.io/random');
         res.json({ quote: `${response.data.content} - ${response.data.author}` });
@@ -167,6 +180,7 @@ app.get('/api/quote', async (req, res) => {
 });
 // API Endpoint 4: Respond with environment variable value
 app.get('/api/secret', (req, res) => {
+    console.log('Request to /api/secret');
      const { varName } = req.query;
      if (!varName) {
          return res.status(400).json({ error: 'varName query parameter is required' });
@@ -181,14 +195,18 @@ app.get('/api/secret', (req, res) => {
 
 // API Endpoint: List All Environment Variable Keys
 app.get('/api/envKeys', (req, res) => {
+    console.log('Request to /api/envKeys');
     const envKeys = Object.keys(process.env);
     res.json({ keys: envKeys });
 });
 
 //API Endpoint: Health Check for App Readiness
 app.get('/health/readiness', (req, res) => {
+    console.log('Request to /health/readiness');
+    readinessCounter++;
+
     // Get the delay from the query parameter, default to 0 seconds if not provided
-    const delayInSeconds = parseInt(req.query.delay) || 0;
+    const delayInSeconds = simulateDelay(Number(req.query.delay || 0), readinessCounter);
 
     // Set a maximum delay limit if needed (e.g., 30 seconds)
     const maxDelayInSeconds = 30; // 30 seconds
@@ -202,8 +220,10 @@ app.get('/health/readiness', (req, res) => {
     }, delayInMilliseconds);
 });
 
+
 // API Endpoint: Liveness Check
 app.get('/health/liveness', (req, res) => {
+    console.log('Request to /health/liveness');
     res.status(200).json({ status: 'Application is alive' });
 });
 
